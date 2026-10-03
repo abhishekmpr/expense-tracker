@@ -1,150 +1,83 @@
-class ExpenseTracker {
-  constructor() {
-    this.transactions = [];
-    this.totalIncome = 0;
-    this.totalExpenses = 0;
-    this.currentBalance = 0;
+let transactions = [];
+let income = 0;
+let expenses = 0;
+let balance = 0;
 
-    this.addTransactionForm = document.getElementById('add-transaction-form');
-    this.transactionType = document.getElementById('transaction-type');
-    this.description = document.getElementById('description');
-    this.amount = document.getElementById('amount');
-    this.date = document.getElementById('date');
+// Add event listeners to form inputs
+document.getElementById('add-transaction-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const type = document.getElementById('transaction-type').value;
+    const description = document.getElementById('description').value;
+    const amount = document.getElementById('amount').value;
+    const date = document.getElementById('date').value;
 
-    this.totalIncomeElement = document.getElementById('total-income');
-    this.totalExpensesElement = document.getElementById('total-expenses');
-    this.currentBalanceElement = document.getElementById('current-balance');
-    this.transactionsList = document.getElementById('transactions-list');
-
-    this.loadData();
-    this.addTransactionForm.addEventListener('submit', this.handleAddTransactionFormSubmit.bind(this));
-    this.transactionsList.addEventListener('click', this.handleTransactionListClick.bind(this));
-  }
-
-  handleAddTransactionFormSubmit(event) {
-    event.preventDefault();
-
-    const transactionType = this.transactionType.value.trim();
-    const description = this.description.value.trim();
-    const amount = this.amount.value.trim();
-    const date = this.date.value.trim();
-
-    if (amount === '') {
-      alert('Please enter a valid amount');
-      return;
+    if (amount === '' || amount <= 0) {
+        alert('Amount must be a positive number');
+        return;
     }
 
-    if (transactionType === '') {
-      alert('Please select a transaction type');
-      return;
+    if (type === 'income') {
+        income += parseFloat(amount);
+    } else {
+        expenses += parseFloat(amount);
     }
 
-    if (isNaN(amount) || amount <= 0) {
-      alert('Please enter a valid amount');
-      return;
+    balance = income - expenses;
+
+    if (type === 'income') {
+        transactions.push({ id: transactions.length, type, description, amount, date, deleteButton: document.createElement('button'), deleteButtonText: 'Delete' });
+    } else {
+        transactions.push({ id: transactions.length, type, description, amount, date, deleteButton: document.createElement('button'), deleteButtonText: 'Delete' });
+        transactions[transactions.length - 1].deleteButton.textContent = 'Remove';
     }
 
-    const transaction = {
-      id: this.transactions.length + 1,
-      type: transactionType,
-      description,
-      amount: Number(amount),
-      date,
-    };
+    updateUI();
 
-    this.transactions.push(transaction);
-    this.totalIncome += transaction.amount;
-    this.totalExpenses += transaction.amount;
-    this.currentBalance = this.totalIncome - this.totalExpenses;
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+    localStorage.setItem('balance', balance);
+});
 
-    this.addTransactionForm.reset();
-    this.updateUI();
-    this.saveData();
-  }
+// Update UI
+function updateUI() {
+    const totalIncomeElement = document.getElementById('total-income');
+    totalIncomeElement.textContent = `Total Income: $${income.toFixed(2)}`;
 
-  handleTransactionListClick(event) {
-    if (event.target.classList.contains('delete-button')) {
-      const transactionId = event.target.parentNode.dataset.transactionId;
-      const transactionIndex = this.transactions.findIndex(t => t.id === transactionId);
+    const totalExpensesElement = document.getElementById('total-expenses');
+    totalExpensesElement.textContent = `Total Expenses: $${expenses.toFixed(2)}`;
 
-      if (transactionIndex !== -1) {
-        this.transactions.splice(transactionIndex, 1);
-        this.totalIncome -= this.transactions[transactionIndex].amount;
-        this.totalExpenses -= this.transactions[transactionIndex].amount;
-        this.currentBalance = this.totalIncome - this.totalExpenses;
-        this.updateUI();
-        this.saveData();
-      }
-    }
-  }
+    const currentBalanceElement = document.getElementById('current-balance');
+    currentBalanceElement.textContent = `Current Balance: $${balance.toFixed(2)}`;
 
-  loadData() {
-    const storedData = localStorage.getItem('expenses');
-    if (storedData) {
-      const data = JSON.parse(storedData);
-      this.transactions = data.transactions.map(t => ({
-        id: t.id,
-        type: t.type,
-        description: t.description,
-        amount: t.amount,
-        date: t.date,
-      }));
+    const transactionsListElement = document.getElementById('transactions-list');
+    transactionsListElement.innerHTML = '';
 
-      this.totalIncome = data.totalIncome;
-      this.totalExpenses = data.totalExpenses;
-      this.currentBalance = data.currentBalance;
+    transactions.forEach((transaction, index) => {
+        const transactionElement = document.createElement('div');
+        transactionElement.textContent = `${transaction.type} - ${transaction.description} - $${transaction.amount.toFixed(2)} on ${transaction.date}`;
+        transaction.deleteButton.textContent = transaction.deleteButtonText;
+        transaction.deleteButton.onclick = () => deleteTransaction(index);
 
-      this.updateUI();
-    }
-  }
-
-  saveData() {
-    const data = {
-      transactions: this.transactions,
-      totalIncome: this.totalIncome,
-      totalExpenses: this.totalExpenses,
-      currentBalance: this.currentBalance,
-    };
-
-    localStorage.setItem('expenses', JSON.stringify(data));
-  }
-
-  updateUI() {
-    this.totalIncomeElement.textContent = this.totalIncome;
-    this.totalExpensesElement.textContent = this.totalExpenses;
-    this.currentBalanceElement.textContent = this.currentBalance;
-
-    this.transactionsList.innerHTML = '';
-
-    this.transactions.forEach(transaction => {
-      const transactionElement = document.createElement('div');
-      transactionElement.classList.add('transaction');
-      transactionElement.dataset.transactionId = transaction.id;
-
-      const transactionTypeElement = document.createElement('p');
-      transactionTypeElement.textContent = transaction.type;
-      transactionElement.appendChild(transactionTypeElement);
-
-      const transactionDescriptionElement = document.createElement('p');
-      transactionDescriptionElement.textContent = transaction.description;
-      transactionElement.appendChild(transactionDescriptionElement);
-
-      const transactionAmountElement = document.createElement('p');
-      transactionAmountElement.textContent = `$${transaction.amount}`;
-      transactionElement.appendChild(transactionAmountElement);
-
-      const transactionDateElement = document.createElement('p');
-      transactionDateElement.textContent = transaction.date;
-      transactionElement.appendChild(transactionDateElement);
-
-      const deleteButton = document.createElement('button');
-      deleteButton.classList.add('delete-button');
-      deleteButton.textContent = 'Delete';
-      transactionElement.appendChild(deleteButton);
-
-      this.transactionsList.appendChild(transactionElement);
+        transactionElement.appendChild(transaction.deleteButton);
+        transactionsListElement.appendChild(transactionElement);
     });
-  }
 }
 
-const expenseTracker = new ExpenseTracker();
+// Delete transaction
+function deleteTransaction(index) {
+    transactions.splice(index, 1);
+
+    updateUI();
+}
+
+// Load data from localStorage
+if (localStorage.getItem('transactions')) {
+    transactions = JSON.parse(localStorage.getItem('transactions'));
+    transactions.forEach((transaction) => {
+        if (transaction.type === 'income') {
+            transaction.amount = parseFloat(transaction.amount);
+            transaction.deleteButton.textContent = 'Remove';
+        }
+    });
+
+    updateUI();
+}

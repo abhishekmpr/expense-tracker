@@ -1,36 +1,50 @@
 # Expense Tracker
 
 ## Description
-Expense Tracker is a personal expense management application that allows users to track their daily expenses and generate reports.
+A simple expense tracker application built to help users manage their daily expenses.
 
 ## Features
 
-* User registration and login functionality
-* Ability to add, edit, and delete expenses
-* Daily expense tracking with date and category
-* Basic report generation (total expenses, average expense per category)
+- User registration and login functionality
+- Expense creation and editing
+- Basic data visualization for total expenses
 
 ## Technologies
 
-* Frontend: HTML5, CSS3, JavaScript (React.js)
-* Backend: Node.js, Express.js, MongoDB
-* Database: MongoDB
+- Frontend: HTML, CSS, JavaScript
+- Backend: Node.js, Express.js, MongoDB
+- Database: MongoDB
+- Deployment: Heroku
 
 ## How to Run
-
-1. Clone the repository: `git clone https://github.com/username/expense-tracker.git`
-2. Install dependencies: `npm install`
-3. Start the application: `npm start`
+1. Clone the repository
+2. Install dependencies with `npm install`
+3. Start the server with `node server.js`
 
 ## Project Structure
-
-* client: frontend code
-* server: backend code
-* public: static assets
-* db: MongoDB database
+```
+expense-tracker/
+client/
+public/
+index.html
+styles.css
+script.js
+server.js
+models/
+Expense.js
+routes/
+expenses.js
+user.js
+utils/
+database.js
+app.js
+package.json
+```
 
 ## Future Improvements
 
-* Implement advanced report generation
-* Add user dashboard with expense history
-* Implement login and registration using OAuth
+- Implement data validation and error handling
+- Add user authentication using OAuth
+- Integrate with a payment gateway for online transactions
+- Enhance data visualization with charts and graphs
+- Optimize database performance for larger datasets

@@ -1,48 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Expense Tracker</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Expense Tracker</h1>
-    </header>
-    <main>
-        <section class="dashboard">
-            <div class="income">
-                <h2>Total Income</h2>
-                <p id="total-income">$0.00</p>
-            </div>
-            <div class="expense">
-                <h2>Total Expense</h2>
-                <p id="total-expense">$0.00</p>
-            </div>
-            <div class="balance">
-                <h2>Balance</h2>
-                <p id="balance">$0.00</p>
-            </div>
-        </section>
-        <section class="transactions">
-            <form id="transaction-form">
-                <label for="transaction-type">Transaction Type:</label>
-                <select id="transaction-type">
-                    <option value="Income">Income</option>
-                    <option value="Expense">Expense</option>
-                </select>
-                <label for="description">Description:</label>
-                <input type="text" id="description" required>
-                <label for="amount">Amount:</label>
-                <input type="number" id="amount" required>
-                <label for="date">Date:</label>
-                <input type="date" id="date" required>
-                <button type="submit">Add Transaction</button>
-            </form>
-            <ul id="transaction-list"></ul>
-        </section>
-    </main>
-    <script src="script.js"></script>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section class="dashboard">
+      <h1>Expense Tracker</h1>
+      <section class="total-income">
+        <h2>Total Income</h2>
+        <p id="total-income"></p>
+      </section>
+      <section class="total-expense">
+        <h2>Total Expense</h2>
+        <p id="total-expense"></p>
+      </section>
+      <section class="balance">
+        <h2>Balance</h2>
+        <p id="balance"></p>
+      </section>
+    </section>
+    <section class="transaction-form">
+      <h2>Add Transaction</h2>
+      <select id="transaction-type">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+      <input type="text" id="description" placeholder="Description">
+      <input type="number" id="amount" placeholder="Amount">
+      <input type="date" id="date" placeholder="Date">
+      <button id="add-transaction">Add Transaction</button>
+    </section>
+    <section class="transaction-list">
+      <h2>Transactions</h2>
+      <ul id="transaction-list">
+        <!-- transactions will be listed here -->
+      </ul>
+    </section>
+  </main>
+  <script src="script.js"></script>
 </body>
 </html>
